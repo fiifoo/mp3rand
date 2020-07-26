@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"time"
+
+	"github.com/ricochet2200/go-disk-usage/du"
 )
 
 type File struct {
@@ -14,6 +16,9 @@ type File struct {
 	Name string
 	Size int64
 }
+
+var KB = int64(1024)
+var MB = KB * KB
 
 func IsDirectory(directory string) bool {
 	file, err := os.Open(directory)
@@ -42,12 +47,18 @@ func IsEmptyDirectory(directory string) bool {
 	return len(files) == 0
 }
 
+func SpaceAvailable(directory string) int64 {
+	usage := du.NewDiskUsage("E:\\")
+
+	return int64(usage.Available())
+}
+
 func ReadFiles(
 	directory string,
 	extension string,
 	progress func(totalCount int, totalSize int64)) (files []File, totalSize int64, err error) {
 
-	files = make([]File, 0)
+	files = make([]File, 0, 100000)
 	totalCount := 0
 
 	err = filepath.Walk(directory,

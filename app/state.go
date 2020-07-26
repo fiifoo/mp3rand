@@ -5,6 +5,7 @@ import "github.com/fiifoo/mp3rand/fs"
 type State struct {
 	Phase int
 	Done  bool
+	Error error
 
 	Source Source
 	Target Target
@@ -12,8 +13,8 @@ type State struct {
 
 type Source struct {
 	Directory string
-	Files     []fs.File
 	TotalSize int64
+	Files     []fs.File
 }
 
 type Target struct {
